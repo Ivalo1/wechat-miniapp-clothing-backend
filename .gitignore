@@ -1,0 +1,15 @@
+.idea/
+.target/
+*.iml
+*.class
+*.log
+/mvnw
+/mvnw.cmd
+/target/
+/.settings/
+/.mvn/
+/.classpath
+/.project
+/.settings/
+.DS_Store
+.env
