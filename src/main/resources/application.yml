@@ -1,26 +1,116 @@
-spring:
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/wechat_clothing?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
-
-mybatis:
-  config-location: classpath:mybatis-config.xml
-  mapper-locations: classpath*:mappers/*.xml
-
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
+spring:
+  application:
+    name: wechat-miniapp-clothing-backend
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/wechat_clothing}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+# MyBatis-Plus
+mybatis-plus:
+  mapper-locations: classpath*:mappers/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: false
+
+# JWT
 jwt:
-  secret: change-me-please
+  secret: ${JWT_SECRET:your-256-bit-secret-key-for-jwt-token-signing-change-in-production}
+  expiration: ${JWT_EXPIRATION:86400000}
+  admin-expiration: ${JWT_ADMIN_EXPIRATION:28800000}
 
-swagger:
-  user: swagger
-  password: swaggerpass
-
+# WeChat Mini App
 wechat:
-  appid: your-wechat-appid
-  secret: your-wechat-secret
+  miniapp:
+    appid: ${WX_APPID:your-appid}
+    secret: ${WX_SECRET:your-secret}
+  pay:
+    appid: ${WX_PAY_APPID:your-appid}
+    mch-id: ${WX_MCH_ID:your-mch-id}
+    mch-key: ${WX_MCH_KEY:your-mch-key}
+    notify-url: ${WX_NOTIFY_URL:https://your-domain.com/api/mini/pay/notify}
+    cert-path: ${WX_CERT_PATH:}
+    key-path: ${WX_KEY_PATH:}
+
+# Aliyun OSS
+aliyun:
+  oss:
+    endpoint: ${ALIYUN_OSS_ENDPOINT:oss-cn-hangzhou.aliyuncs.com}
+    access-key-id: ${ALIYUN_OSS_ACCESS_KEY:your-access-key}
+    access-key-secret: ${ALIYUN_OSS_SECRET_KEY:your-secret-key}
+    bucket-name: ${ALIYUN_OSS_BUCKET:your-bucket-name}
+
+# Knife4j
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# Logging
+logging:
+  level:
+    com.ivalo1.wechatbackend: debug
+    org.springframework.security: info
+
+# Snowflake ID
+snowflake:
+  worker-id: ${SNOWFLAKE_WORKER_ID:0}
+  datacenter-id: ${SNOWFLAKE_DATACENTER_ID:1}
+
+# XXL-Job
+xxl:
+  job:
+    admin:
+      addresses: ${XXL_JOB_ADMIN_ADDRESSES:http://localhost:8090/xxl-job-admin}
+    access-token: ${XXL_JOB_ACCESS_TOKEN:}
+    executor:
+      appname: ${XXL_JOB_APPNAME:wechat-clothing-executor}
+      port: ${XXL_JOB_EXECUTOR_PORT:9999}
+      logpath: ${XXL_JOB_LOGPATH:./logs/xxl-job}
+      logretentiondays: 30
+
+# RocketMQ
+rocketmq:
+  name-server: ${ROCKETMQ_NAME_SERVER:localhost:9876}
+  producer:
+    group: ${ROCKETMQ_PRODUCER_GROUP:wechat-clothing-producer}
+    send-message-timeout: 3000
+    retry-times-when-send-failed: 2

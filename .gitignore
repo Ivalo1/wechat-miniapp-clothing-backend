@@ -13,3 +13,16 @@
 /.settings/
 .DS_Store
 .env
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log.*
+
+# Heap dumps
+*.hprof
+
+# XXL-Job
+xxl-job/
