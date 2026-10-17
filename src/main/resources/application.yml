@@ -16,3 +16,11 @@ server:
 
 jwt:
   secret: change-me-please
+
+swagger:
+  user: swagger
+  password: swaggerpass
+
+wechat:
+  appid: your-wechat-appid
+  secret: your-wechat-secret
