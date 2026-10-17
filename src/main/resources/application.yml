@@ -13,3 +13,6 @@ mybatis:
 
 server:
   port: 8080
+
+jwt:
+  secret: change-me-please

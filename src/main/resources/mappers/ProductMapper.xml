@@ -11,23 +11,45 @@
     <result property="price" column="price" />
     <result property="imageUrl" column="image_url" />
     <result property="createdAt" column="created_at" />
+    <result property="inventory" column="inventory" />
   </resultMap>
 
   <select id="findAll" resultMap="ProductResult">
-    SELECT id, name, description, price, image_url, created_at
+    SELECT id, name, description, price, image_url, created_at, inventory
     FROM products
     ORDER BY created_at DESC
   </select>
 
+  <select id="findPage" parameterType="map" resultMap="ProductResult">
+    SELECT id, name, description, price, image_url, created_at, inventory
+    FROM products
+    ORDER BY created_at DESC
+    LIMIT #{offset}, #{limit}
+  </select>
+
+  <select id="countAll" resultType="long">
+    SELECT COUNT(1) FROM products
+  </select>
+
   <select id="findById" parameterType="long" resultMap="ProductResult">
-    SELECT id, name, description, price, image_url, created_at
+    SELECT id, name, description, price, image_url, created_at, inventory
     FROM products
     WHERE id = #{id}
   </select>
 
   <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO products(name, description, price, image_url, created_at)
-    VALUES(#{name}, #{description}, #{price}, #{imageUrl}, #{createdAt})
+    INSERT INTO products(name, description, price, image_url, created_at, inventory)
+    VALUES(#{name}, #{description}, #{price}, #{imageUrl}, #{createdAt}, #{inventory})
   </insert>
+
+  <update id="update" parameterType="Product">
+    UPDATE products
+    SET name = #{name}, description = #{description}, price = #{price}, image_url = #{imageUrl}, inventory = #{inventory}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="delete" parameterType="long">
+    DELETE FROM products WHERE id = #{id}
+  </delete>
 
 </mapper>
